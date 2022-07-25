@@ -5,6 +5,10 @@ import java.util.Date;
 
 public class Note {
 
+    public static final String KEY_ID = "_id";
+    public static final String KEY_NOTE_COLUMN = "NOTE_COLUMN";
+    public static final String KEY_NOTE_CREATED_COLUMN = "NOTE_CREATED_COLUMN";
+
     String note;
     Date created;
 
