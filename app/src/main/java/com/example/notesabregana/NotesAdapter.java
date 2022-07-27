@@ -68,7 +68,8 @@ public class NotesAdapter extends ArrayAdapter<Note> {
 
         TextView tvNote = noteView.findViewById(R.id.tvNote);
         TextView tvTime = noteView.findViewById(R.id.tvTime);
-        tvNote.setText(act_note);   tvTime.setText(timeString);
+        tvNote.setText(act_note + "★");
+        tvTime.setText(timeString);
 
         ImageButton btnDelete = noteView.findViewById(R.id.btnDelete);
         //setting btnDelete programmatically cuz it didn't work in the layout ; - ;
