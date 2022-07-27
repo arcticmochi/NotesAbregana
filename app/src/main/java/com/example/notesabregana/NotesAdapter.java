@@ -1,6 +1,9 @@
 package com.example.notesabregana;
 
+import static com.example.notesabregana.Note.*;
+
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +30,14 @@ public class NotesAdapter extends ArrayAdapter<Note> {
     List<Note> notes;
     FragmentManager fm;
     Note current;
+    NotesOpenHelper helper;
 
-    public NotesAdapter(@NonNull Context context, int resource, @NonNull List<Note> objects, FragmentManager fm) {
+    public NotesAdapter(@NonNull Context context, int resource, @NonNull List<Note> objects, FragmentManager fm, NotesOpenHelper helper) {
         super(context, resource, objects);
         this.resource = resource;
         this.notes = objects;
         this.fm = fm;
+        this.helper = helper;
     }
 
     @NonNull
@@ -71,6 +76,18 @@ public class NotesAdapter extends ArrayAdapter<Note> {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int id = note.id;
+                String selector = KEY_ID + "=" + id;
+                String selectorArgs[] = null;
+                /*
+                Selecting a set of arguments
+                String selector = KEY_ID + "=?";
+                String selectorArgs[] = {id+""};
+                 */
+
+                SQLiteDatabase db = helper.getWritableDatabase();
+                db.delete(NotesOpenHelper.DATABASE_TABLE, selector, selectorArgs);
+
                 //remove the note in the particular note position
                 notes.remove(note);
                 //Method from ArrayAdapter()
