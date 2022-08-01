@@ -2,9 +2,12 @@ package com.example.notesabregana;
 
 import static com.example.notesabregana.Note.*;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +71,11 @@ public class NotesAdapter extends ArrayAdapter<Note> {
 
         TextView tvNote = noteView.findViewById(R.id.tvNote);
         TextView tvTime = noteView.findViewById(R.id.tvTime);
-        tvNote.setText(act_note + "★");
+        if (note.important) {
+            tvNote.setText(act_note + "★");
+        } else {
+            tvNote.setText(act_note);
+        }
         tvTime.setText(timeString);
 
         ImageButton btnDelete = noteView.findViewById(R.id.btnDelete);
@@ -87,8 +94,10 @@ public class NotesAdapter extends ArrayAdapter<Note> {
                 String selectorArgs[] = {id+""};
                  */
 
-                SQLiteDatabase db = helper.getWritableDatabase();
-                db.delete(NotesOpenHelper.DATABASE_TABLE, selector, selectorArgs);
+//                SQLiteDatabase db = helper.getWritableDatabase();
+//                db.delete(NotesOpenHelper.DATABASE_TABLE, selector, selectorArgs);
+                ContentResolver cr = getContext().getContentResolver();
+                cr.delete(NotesContentProvider.CONTENT_URI, selector, selectorArgs);
 
                 //remove the note in the particular note position
                 notes.remove(note);
@@ -121,8 +130,13 @@ public class NotesAdapter extends ArrayAdapter<Note> {
 
         String selector = KEY_ID + "=" + current.id;
         String selectorArgs[] = null;
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.update(NotesOpenHelper.DATABASE_TABLE, cv, selector, selectorArgs);
+
+        ContentResolver cr = getContext().getContentResolver();
+
+        Uri rowUri = ContentUris.withAppendedId(NotesContentProvider.CONTENT_URI, current.id);
+        cr.update(rowUri, cv, null, null);
+//        SQLiteDatabase db = helper.getWritableDatabase();
+//        db.update(NotesOpenHelper.DATABASE_TABLE, cv, selector, selectorArgs);
         current = null;
     }
 
